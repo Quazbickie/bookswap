@@ -1,5 +1,5 @@
 import { auth } from '../config/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { useState } from "react";
 
 export const Auth = () => {
@@ -8,7 +8,19 @@ export const Auth = () => {
     const [password, setPassword] = useState("");
 
     const signIn = async () => {
-        await createUserWithEmailAndPassword(auth, email, password);
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+        } catch(err){
+            console.error(err);
+        }
+    }
+
+    const logout = async () => {
+        try {
+            await signOut(auth);
+        } catch(err) {
+            console.error(err);
+        }
     }
 
     return (
@@ -23,6 +35,8 @@ export const Auth = () => {
                 onChange={(e) => setPassword(e.target.value)}
             />
             <button onClick={signIn}>Sign In</button>
+            <button onClick={logout}>Sign Out</button>
+
         </div>
     );
 };
